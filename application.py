@@ -1,8 +1,10 @@
 from flask import Flask, request, render_template
 from boto3.dynamodb.conditions import Key, Attr
+from flask_bootstrap import Bootstrap
 import boto3
 
 application = Flask(__name__)
+Bootstrap(application)
 
 def user_subscriptions():
     dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
@@ -19,4 +21,4 @@ def index():
 
 
 if __name__ == '__main__':
-    application.run()
+    application.run(debug=True)
