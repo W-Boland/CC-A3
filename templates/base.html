@@ -14,7 +14,8 @@
   </head>
   <body>
     {% include 'navbar.html' %}
-    <h1> Hello {{ session['email']}}</h1>
+    {% block content %}
+    {% endblock %}
     <!-- Optional JavaScript; choose one of the two! -->
 
     <!-- Option 1: Bootstrap Bundle with Popper -->

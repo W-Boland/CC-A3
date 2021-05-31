@@ -1,15 +1,23 @@
-from flask import Flask, request, render_template, redirect, session
+from flask import Flask, request, render_template, redirect, session, jsonify
 from boto3.dynamodb.conditions import Key, Attr
+from dotenv import load_dotenv
+
 import boto3
+import os
+import requests
+
 
 application = Flask(__name__)
 application.secret_key = 'thisisthesecretkey'
+load_dotenv()
 
 def auth():
     if session.get('login')== True:
         return True
     else: 
         return False
+
+
 
 # Create a new user and add to the current table for AWS 
 def create_user(email, user_name, password):
@@ -23,6 +31,20 @@ def create_user(email, user_name, password):
         }
     )
     return 
+
+def sort_function(value):
+    return value["rating"]
+
+def query_favs(limit):
+
+    # Connect to the Dynamodb using Boto3
+    dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
+    table = dynamodb.Table('Favourites')
+    response = table.query(
+        KeyConditionExpression=Key('email').eq(session['email']),
+    )
+    sortedList = sorted(response['Items'], key=sort_function, reverse=True)
+    return sortedList[:limit]
 
 def query_users(email, password=None):
     
@@ -49,11 +71,23 @@ def query_users(email, password=None):
 @application.route('/')
 def index():
     if auth():
-        return render_template('base.html')
+        response = (requests.get((os.environ.get("API_GATEWAY_ENDPOINT_URL")) + '/popular'))
+        json_object = response.json()
+        return render_template('home.html', data=json_object)
     else: 
         return redirect('/login')
 
-    
+@application.route('/drink/<id>')
+def drink(id):
+    if auth():
+        parameters = {
+            "i": id
+        }
+        response = (requests.get((os.environ.get("API_GATEWAY_ENDPOINT_URL") + '/id'), params=parameters))
+        drink_info = response.json()
+        return render_template('drink.html', drink=drink_info)
+    else: 
+        return redirect('/login')
 
 @application.route('/login',methods=['POST'])
 @application.route('/login')
@@ -72,10 +106,22 @@ def login():
             session['email'] = email
             session['userName'] = userName
             session['login'] = True
-            return redirect('/')
+            return redirect('/dashboard')
     else:
         return render_template('login.html')
 
+#Authenticated route 
+@application.route('/dashboard')
+def dashboard():
+    if auth():
+        favourites = query_favs(5)
+        return render_template('dashboard.html', favs=favourites)
+    else: 
+        return redirect('/login')
+
+@application.route('/404')
+def todo():
+    return "PAGE NOT COMPLETE"
 
 @application.route('/logout')
 def logout():

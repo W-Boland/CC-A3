@@ -25,3 +25,44 @@
   margin-top: 1%;
   padding-top: 2%;
 }
+
+.logout {
+  text-decoration: none;
+  color: white;
+  float: right!important;
+}
+
+a, a:hover, a:focus, a:active {
+  text-decoration: none;
+  color: #c5c5c5 ;
+}
+
+.imgCarousel {
+  background-color: grey;
+  width: 50%;
+  height: 50%;
+  margin: auto;
+
+  padding-top: 3%;
+  align-items: center;
+}
+
+.picture {
+  padding: auto;
+  align-self: center;
+  margin: auto;
+}
+
+.card {
+  display: inline-block;
+  margin: 2%;
+}
+
+.fav-heading {
+  padding-top: .5%;
+  padding-left: 2%;
+}
+
+.nav-shadow {
+  box-shadow: 0px 0px 6px 4px rgba(0, 0, 0, .3);
+}

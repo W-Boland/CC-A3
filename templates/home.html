@@ -1,0 +1,17 @@
+
+{% extends 'base.html' %}
+{% block content %}
+    {% for drink in data["drinks"] %}
+    <div class="card" style="width: 18rem;">
+        <img src="{{drink['strDrinkThumb']}}" class="card-img-top" alt="...">
+        <div class="card-body">
+        <h5 class="card-title">{{drink['strDrink']}}</h5>
+        <p class="card-text">
+            &#9734
+            &#9733
+        </p>
+        <a href="/drink/{{drink['idDrink']}}" class="btn btn-primary">View</a>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}
