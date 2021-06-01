@@ -17,7 +17,13 @@ def auth():
     else: 
         return False
 
-
+# Check to see if an image exists 
+def is_url_image(image_url):
+   image_formats = ("image/png", "image/jpeg", "image/jpg")
+   r = requests.head(image_url)
+   if r.headers["content-type"] in image_formats:
+      return True
+   return False
 
 # Create a new user and add to the current table for AWS 
 def create_user(email, user_name, password):
@@ -31,6 +37,9 @@ def create_user(email, user_name, password):
         }
     )
     return 
+
+# Retrive the users Profile picture
+
 
 def sort_function(value):
     return value["rating"]
@@ -118,6 +127,31 @@ def dashboard():
         return render_template('dashboard.html', favs=favourites)
     else: 
         return redirect('/login')
+
+
+@application.route('/profile',methods=['POST'])
+@application.route('/profile')
+def profile():
+    if auth():
+        if request.method == 'POST':
+            s3 = boto3.client('s3', region_name='ap-southeast-2')
+            img = request.files['file']
+            if img:
+                filename = session['email'] + ".png"
+                img.save(filename)
+
+                os.remove(filename)
+
+        
+        email = session['email'].replace("@","%40")
+        url = os.environ.get("PROFILE_S3_BUCKET") + email + ".png"
+
+        exists = is_url_image(url)
+        print(exists)
+        return render_template('profile.html', url=url, img=exists)
+    else: 
+        return redirect('/login')
+
 
 @application.route('/404')
 def todo():

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="profile-page">
+        <div class="card" style="width: 36rem;">
+            <div class="profile-info">
+                <div class="profile-img">
+                    {% if img %}
+                        <img style="border-radius: 50%; box-shadow:  0px 0px 2px .5px rgba(51, 56, 65, 0.335);" src= "{{url}}" alt="" width="250" height="225" alt="Profile Picture">
+                    {% else %}
+                        <div class=cirle>
+                            <button 
+                                style="height: 100%; width: 100%; border-radius: 50%;"
+                                type="button" 
+                                class="btn btn-outline-dark" 
+                                data-bs-toggle="modal" 
+                                data-bs-target="#exampleModal" 
+                                data-bs-whatever="@mdo"><b>Upload Profile Picture</b></button>
+                        </div>
+
+                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLabel">Upload Profile Picture</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                  <form method="POST" enctype="multipart/form-data">
+                                    <input type="file" name="file" value="file" accept="image/*" onchange="loadFile(event)">
+                                    <img id="output"/>
+                                    <script>
+                                      var loadFile = function(event) {
+                                        var output = document.getElementById('output');
+                                        output.src = URL.createObjectURL(event.target.files[0]);
+                                        output.onload = function() {
+                                          URL.revokeObjectURL(output.src) // free memory
+                                        }
+                                      };
+                                    </script>
+                                    <div class="upload-btn">
+                                        <button type="submit" class="btn btn-primary btn-lg" value="upload">Upload</button>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                    {% endif %}
+                </div>
+                <hr style="width: 80%; margin: auto;">
+                <div class="card-body">
+                    <h5 class="card-title">{{session['userName']}}</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+
