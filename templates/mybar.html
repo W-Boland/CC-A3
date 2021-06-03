@@ -1,0 +1,73 @@
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='bar.css') }}">
+{% extends 'base.html' %}
+{% block content %}
+<div class=bar-shelf>
+    <br>
+        {% for drink in ingredients %}
+        {% if drink['drink'] == "true" %}
+        
+            <div class="ingedient">
+                <form method="POST" id="shelf">
+                    <div class="title">
+                    <p1>{{drink['ingredients']}} </p1> 
+                    <button 
+                        style="float: right;" 
+                        value="{{drink['ingredients']}}"
+                        type="submit" 
+                        class="btn-close"
+                        name="submit" 
+                        aria-label="Close"></button>
+                    </div>
+                    <img src={{drink['img']}}>
+                </form>
+            </div>
+        
+        {% else %}
+        {% endif %}
+        {% endfor %}
+    <hr style="box-shadow: 0px 0px 6px 4px rgba(0, 0, 0, .2); ">
+
+    <h1> Add ingredients</h1>
+    <form method="POST" id="search">
+        <input type="text" id="search" name="search">
+        <input type="submit" value="search">
+        <input type="hidden" name="submit" value="search">
+    </form>
+    
+    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+
+        <table class="table table-bordered table-striped mb-0">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">First</th>
+              <th scope="col">Info</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if ingredients%}
+            {% for ingredients in ingredientList['drinks'] %}
+            <tr>
+                <form method="POST" id="add">
+                    <td><input type="submit" value="Add"></td>
+                    <td>{{ingredients['strIngredient1']}}</td>
+                    <input type="hidden" name="submit" value="add">
+                    <input type="hidden" name="ingredient" value="{{ingredients['strIngredient1']}}">
+                </form>
+                <form action="/ingredientInfo" method="POST" id="info">
+                    <td><input type="submit" value="Info"></td>
+                    <input type="hidden" name="submit" value="info">
+                    <input type="hidden" name="ingredient" value="{{ingredients['strIngredient1']}}">
+                </form>
+            </tr>
+            {% endfor %}
+            {% else %}
+            {% endif %}
+          </tbody>
+        </table>
+      
+      </div>
+
+
+</div>
+{% endblock %}

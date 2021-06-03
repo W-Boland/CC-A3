@@ -1,0 +1,25 @@
+.ingedient {
+    width: 100;
+    margin-bottom: -13;
+    display: inline-block;
+    text-transform: capitalize;
+}
+
+.bar-shelf {
+    margin: auto;
+    width: 90%;
+}
+
+.title {
+    text-align: center;
+    padding-bottom: 10;
+}
+
+.my-custom-scrollbar {
+    position: relative;
+    height: 200px;
+    overflow: auto;
+}
+.table-wrapper-scroll-y {
+    display: block;
+}

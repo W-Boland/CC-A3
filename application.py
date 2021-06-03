@@ -55,6 +55,14 @@ def query_favs(limit):
     sortedList = sorted(response['Items'], key=sort_function, reverse=True)
     return sortedList[:limit]
 
+def ingredients_user():
+    dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
+    table = dynamodb.Table('Bar')
+    response = table.query(
+        KeyConditionExpression=Key('email').eq(session['email']),
+    )
+    return response['Items']
+
 def query_users(email, password=None):
     
     # Connect to the Dynamodb using Boto3
@@ -75,6 +83,41 @@ def query_users(email, password=None):
         )
     # Return results
     return response['Items']
+
+
+def removeItem(item):
+    dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
+    table = dynamodb.Table('Bar')
+    print(item)
+    response = table.delete_item(Key={
+        'email': session['email'],
+        'ingredients': item
+    })
+    return 
+
+def ingredientlist_query(search):
+    # call api to return list of all ingredients 
+    parameters = {
+        "i": "list"
+    }
+    response = (requests.get((os.environ.get("API_GATEWAY_ENDPOINT_URL") + '/list'), params=parameters))
+    data = response.json()
+    return data
+
+def add_ingredient(ingredient):
+    ingredientUrl = ingredient.replace(" ","%20")
+    print(ingredient)
+    url = "https://www.thecocktaildb.com/images/ingredients/" + ingredientUrl + "-small.png"
+    dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
+    table = dynamodb.Table('Bar')
+    response = table.put_item(
+        Item={
+        'email': session['email'],
+        'ingredients': ingredient,
+        'drink': "true",
+        'img': url
+    })
+    return 
 
 # Defualt index 
 @application.route('/')
@@ -139,7 +182,12 @@ def profile():
             if img:
                 filename = session['email'] + ".png"
                 img.save(filename)
-
+                s3.upload_file(
+                    Bucket = os.environ.get("PROFILE_S3_BUCKET_NAME"),
+                    Filename=filename,
+                    Key=filename,
+                    ExtraArgs={'ACL':'public-read', 'ContentType': 'image/jpeg'}
+                )
                 os.remove(filename)
 
         
@@ -156,6 +204,29 @@ def profile():
 @application.route('/404')
 def todo():
     return "PAGE NOT COMPLETE"
+
+@application.route('/mybar',methods=['POST'])
+@application.route('/mybar')
+def mybar():
+    if auth():
+        ingredientList = None
+        if request.method == 'POST':
+            if request.form["submit"] == "search":
+                ingredientList = ingredientlist_query(request.form['search'])
+            elif request.form["submit"] == "add":
+                add_ingredient(request.form['ingredient'])
+            else:
+                removeItem(request.form['submit'])
+
+        ingredients = ingredients_user()
+        return render_template('mybar.html', ingredients=ingredients, ingredientList=ingredientList)
+    else: 
+        redirect('/login')
+
+@application.route('/ingredientInfo', methods=['POST'])
+def info():
+    name = request.form['ingredient']
+    return render_template('ingredientInfo.html', id=name)
 
 @application.route('/logout')
 def logout():

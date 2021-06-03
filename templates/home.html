@@ -1,9 +1,8 @@
-
 {% extends 'base.html' %}
 {% block content %}
     {% for drink in data["drinks"] %}
-    <div class="card" style="width: 18rem;">
-        <img src="{{drink['strDrinkThumb']}}" class="card-img-top" alt="...">
+    <div class="card" style="width: 9rem;">
+        <img src="{{drink['strDrinkThumb']}}/preview" class="card-img-top" alt="...">
         <div class="card-body">
         <h5 class="card-title">{{drink['strDrink']}}</h5>
         <p class="card-text">
