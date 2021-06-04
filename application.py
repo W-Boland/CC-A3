@@ -55,6 +55,19 @@ def query_favs(limit):
     sortedList = sorted(response['Items'], key=sort_function, reverse=True)
     return sortedList[:limit]
 
+
+
+def query_drinks():
+
+    # Connect to the Dynamodb using Boto3
+    dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
+    table = dynamodb.Table('Drinks')
+    response = table.query(
+        KeyConditionExpression=Key('email').eq(session['email']),
+    )
+    return response['Items']
+
+
 def ingredients_user():
     dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
     table = dynamodb.Table('Bar')
@@ -170,7 +183,12 @@ def login():
 def dashboard():
     if auth():
         favourites = query_favs(5)
-        return render_template('dashboard.html', favs=favourites)
+        drinks = query_drinks()
+        drinkName = drinks[0]['name']
+        drinkId =  drinks[0]['id']
+        drinkImg = drinks[0]['img']
+        number = len(drinkId)
+        return render_template('dashboard.html', id=drinkId, img=drinkImg, number=number, name=drinkName, favs=favourites)
     else: 
         return redirect('/login')
 

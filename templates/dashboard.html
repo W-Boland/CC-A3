@@ -1,43 +1,88 @@
 
 {% extends 'base.html' %}
 {% block content %}
-    {% if favs %}
-    <div class="card" style="width: 96%;">
-        <h1 class="fav-heading">Top 5 Personal Favourites</h1> 
-        {% for drink in favs %}
-        <div class="card" style="width: 18rem;">
-            <img src="{{drink['img']}}" class="card-img-top">
-            <div class="card-body">
-                <h5 class="card-title">{{drink['drink']}}</h5>
-                <p class="card-text">
-                    {% if drink['rating'] == 0 %}
-                        &#9734 &#9734 &#9734 &#9734 &#9734
-                    {% endif %}
+    <div class="dashboard">
 
-                    {% if drink['rating'] == 1 %}
-                        &#9733 &#9734 &#9734 &#9734 &#9734
-                    {% endif %}
-
-                    {% if drink['rating'] == 2 %}
-                        &#9733 &#9733 &#9734 &#9734 &#9734
-                    {% endif %}
-
-                    {% if drink['rating'] == 3 %}
-                        &#9733 &#9733 &#9733 &#9734 &#9734
-                    {% endif %}
-
-                    {% if drink['rating'] == 4 %}
-                        &#9733 &#9733 &#9733 &#9733 &#9734
-                    {% endif %}
-
-                    {% if drink['rating'] == 5 %}
-                        &#9733 &#9733 &#9733 &#9733 &#9733 
-                    {% endif %}
-                </p>
-                <a href="/drink/{{drink['id']}}" class="btn btn-primary">View</a>
-            </div>
+        <div class="dashboard-profile"> 
+            <h1> Dashboard </h1>
         </div>
-        {% endfor %}
+
+
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                <button class="nav-link active" id="nav-drinks-tab" data-bs-toggle="tab" data-bs-target="#nav-drinks" type="button" role="tab" aria-controls="nav-drinks" aria-selected="true">Drinks</button>
+                <button class="nav-link" id="nav-favourites-tab" data-bs-toggle="tab" data-bs-target="#nav-favourites" type="button" role="tab" aria-controls="nav-favourites" aria-selected="false">Favourites</button>
+                <button class="nav-link" id="nav-contact-tab" data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false">Saved</button>
+            </div>
+        </nav>
+
+
+     
+        <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-drinks" role="tabpanel" aria-labelledby="nav-drinks-tab">
+                <div class="drink-tab-title">
+                    View Drinks that can be created using the ingredients saved in your bar
+                </div>
+                <div class="card" style="width: 100%;">
+                        {% for index in range(number)%}
+                        <div class="card-inner" style="width: 15rem;">
+                            <a class="drink-card" href="/drink/{{id[index]}}">
+                                <img src="{{img[index]}}/preview" class="card-img-top">
+                                <div class="card-body">
+                                    <h5 class="card-title"><b class="card-name">{{name[index]}}</b></h5>
+                                </div>
+                            </a>
+                        </div>
+                        {% endfor %}
+                </div>
+            </div>
+            <div class="tab-pane fade" id="nav-favourites" role="tabpanel" aria-labelledby="nav-favourites-tab">    
+                {% if favs %}
+                <div class="card" style="width: 100%;">
+                    <h1 class="fav-heading">Personal Favourites</h1> 
+                    {% for drink in favs %}
+                    <div class="card-inner" style="width: 20rem;">
+                        <img src="{{drink['img']}}" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">{{drink['drink']}}</h5>
+                            <p class="card-text">
+                                {% if drink['rating'] == 0 %}
+                                    &#9734 &#9734 &#9734 &#9734 &#9734
+                                {% endif %}
+            
+                                {% if drink['rating'] == 1 %}
+                                    &#9733 &#9734 &#9734 &#9734 &#9734
+                                {% endif %}
+            
+                                {% if drink['rating'] == 2 %}
+                                    &#9733 &#9733 &#9734 &#9734 &#9734
+                                {% endif %}
+            
+                                {% if drink['rating'] == 3 %}
+                                    &#9733 &#9733 &#9733 &#9734 &#9734
+                                {% endif %}
+            
+                                {% if drink['rating'] == 4 %}
+                                    &#9733 &#9733 &#9733 &#9733 &#9734
+                                {% endif %}
+            
+                                {% if drink['rating'] == 5 %}
+                                    &#9733 &#9733 &#9733 &#9733 &#9733 
+                                {% endif %}
+                            </p>
+                            <a href="/drink/{{drink['id']}}" class="btn btn-primary">View</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab"></div>
+        </div>
     </div>
-    {% endif %}
+
+
+
+
+
 {% endblock %}
