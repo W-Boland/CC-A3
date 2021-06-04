@@ -106,14 +106,17 @@ def ingredientlist_query(search):
 
 def add_ingredient(ingredient):
     ingredientUrl = ingredient.replace(" ","%20")
-    print(ingredient)
+    # Change for Jager since it has an accent
+    if ingredient == "Jagermeister":
+        ingredient = "Jägermeister"
+
     url = "https://www.thecocktaildb.com/images/ingredients/" + ingredientUrl + "-small.png"
     dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
     table = dynamodb.Table('Bar')
     response = table.put_item(
         Item={
         'email': session['email'],
-        'ingredients': ingredient,
+        'ingredients': ingredient.title(),
         'drink': "true",
         'img': url
     })
@@ -170,6 +173,10 @@ def dashboard():
         return render_template('dashboard.html', favs=favourites)
     else: 
         return redirect('/login')
+
+@application.route('/explore')
+def explore():
+    return render_template('explore.html')
 
 
 @application.route('/profile',methods=['POST'])

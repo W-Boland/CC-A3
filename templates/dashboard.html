@@ -3,41 +3,41 @@
 {% block content %}
     {% if favs %}
     <div class="card" style="width: 96%;">
-    <h1 class="fav-heading">Top 5 Personal Favourites</h1> 
-    {% for drink in favs %}
-    <div class="card" style="width: 18rem;">
-        <img src="{{drink['img']}}" class="card-img-top">
-        <div class="card-body">
-        <h5 class="card-title">{{drink['drink']}}</h5>
-        <p class="card-text">
-            {% if drink['rating'] == 0 %}
-                &#9734 &#9734 &#9734 &#9734 &#9734
-            {% endif %}
+        <h1 class="fav-heading">Top 5 Personal Favourites</h1> 
+        {% for drink in favs %}
+        <div class="card" style="width: 18rem;">
+            <img src="{{drink['img']}}" class="card-img-top">
+            <div class="card-body">
+                <h5 class="card-title">{{drink['drink']}}</h5>
+                <p class="card-text">
+                    {% if drink['rating'] == 0 %}
+                        &#9734 &#9734 &#9734 &#9734 &#9734
+                    {% endif %}
 
-            {% if drink['rating'] == 1 %}
-                &#9733 &#9734 &#9734 &#9734 &#9734
-            {% endif %}
+                    {% if drink['rating'] == 1 %}
+                        &#9733 &#9734 &#9734 &#9734 &#9734
+                    {% endif %}
 
-            {% if drink['rating'] == 2 %}
-                &#9733 &#9733 &#9734 &#9734 &#9734
-            {% endif %}
+                    {% if drink['rating'] == 2 %}
+                        &#9733 &#9733 &#9734 &#9734 &#9734
+                    {% endif %}
 
-            {% if drink['rating'] == 3 %}
-                &#9733 &#9733 &#9733 &#9734 &#9734
-            {% endif %}
+                    {% if drink['rating'] == 3 %}
+                        &#9733 &#9733 &#9733 &#9734 &#9734
+                    {% endif %}
 
-            {% if drink['rating'] == 4 %}
-                &#9733 &#9733 &#9733 &#9733 &#9734
-            {% endif %}
+                    {% if drink['rating'] == 4 %}
+                        &#9733 &#9733 &#9733 &#9733 &#9734
+                    {% endif %}
 
-            {% if drink['rating'] == 5 %}
-                &#9733 &#9733 &#9733 &#9733 &#9733 
-            {% endif %}
-        </p>
-        <a href="/drink/{{drink['id']}}" class="btn btn-primary">View</a>
+                    {% if drink['rating'] == 5 %}
+                        &#9733 &#9733 &#9733 &#9733 &#9733 
+                    {% endif %}
+                </p>
+                <a href="/drink/{{drink['id']}}" class="btn btn-primary">View</a>
+            </div>
         </div>
-    </div>
-    {% endfor %}
+        {% endfor %}
     </div>
     {% endif %}
 {% endblock %}
