@@ -135,6 +135,52 @@ def add_ingredient(ingredient):
     })
     return 
 
+def get_list_ingredients(info):
+    ingredients = [] 
+    for i in range(15):
+        string = 'strIngredient' + str(i+1)
+        if info['drinks'][0][string] is None:
+            break
+        elif info['drinks'][0][string] == '':
+            break
+        else:
+            ingredients.append(info['drinks'][0][string].title())      
+    return ingredients 
+
+def get_current_ingredients(drinkIngredients):
+    dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
+    ingredient = []
+    returnList = []
+    table = dynamodb.Table('Bar')
+    response = table.query(
+        KeyConditionExpression=Key('email').eq(session['email']),
+    )
+
+    for items in response['Items']:
+        ingredient.append(items['ingredients'])
+
+    for item in drinkIngredients:
+        if item in ingredient:
+            returnList.append("1")
+        else:
+            returnList.append("0")
+    
+    return returnList 
+
+
+def get_list_measure(info):
+
+    measures = [] 
+    for i in range(15):
+        string = 'strMeasure' + str(i+1)
+        if info['drinks'][0][string] is None:
+            break
+        elif info['drinks'][0][string] == '':
+            break
+        else:
+            measures.append(info['drinks'][0][string].title())      
+    return measures 
+
 # Defualt index 
 @application.route('/')
 def index():
@@ -144,7 +190,7 @@ def index():
         return render_template('home.html', data=json_object)
     else: 
         return redirect('/login')
-
+        
 @application.route('/drink/<id>')
 def drink(id):
     if auth():
@@ -153,7 +199,30 @@ def drink(id):
         }
         response = (requests.get((os.environ.get("API_GATEWAY_ENDPOINT_URL") + '/id'), params=parameters))
         drink_info = response.json()
-        return render_template('drink.html', drink=drink_info)
+        listIngredients = get_list_ingredients(drink_info) 
+        listmeasure = get_list_measure(drink_info) 
+        number = len(listIngredients)
+        currentIngredients = get_current_ingredients(listIngredients)
+
+        return render_template('drink.html', 
+            drink=drink_info['drinks'][0], 
+            ingredients=listIngredients,
+            measure=listmeasure,
+            number=number,
+            currentBarIngredients=currentIngredients
+        )
+    else: 
+        return redirect('/login')
+
+@application.route('/ingredient/<name>')
+def ingredient(name):
+    if auth():
+        parameters = {
+            "i": name
+        }
+        response = (requests.get((os.environ.get("API_GATEWAY_ENDPOINT_URL") + '/ingredient'), params=parameters))
+        ingredient_info = response.json()
+        return render_template('ingredient.html', ingredient=ingredient_info['ingredients'][0])
     else: 
         return redirect('/login')
 
@@ -184,11 +253,20 @@ def dashboard():
     if auth():
         favourites = query_favs(5)
         drinks = query_drinks()
-        drinkName = drinks[0]['name']
-        drinkId =  drinks[0]['id']
-        drinkImg = drinks[0]['img']
-        number = len(drinkId)
-        return render_template('dashboard.html', id=drinkId, img=drinkImg, number=number, name=drinkName, favs=favourites)
+        if not drinks:
+            return render_template('dashboard.html', empty="true")
+        else:
+            drinkName = drinks[0]['name']
+            drinkId =  drinks[0]['id']
+            drinkImg = drinks[0]['img']
+            number = len(drinkId)
+            return render_template('dashboard.html', 
+                id=drinkId, 
+                img=drinkImg, 
+                number=number, 
+                name=drinkName, 
+                favs=favourites
+            )
     else: 
         return redirect('/login')
 

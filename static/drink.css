@@ -1,0 +1,56 @@
+.drink-title {
+    padding-top: 3%;
+    padding-left: 5%;
+}
+
+.drink-info-card {
+    display: inline-block;
+}
+
+.custom {
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
+.drink-info-ingredients {
+   
+}
+
+.text-in-card {
+    padding: 4px;
+}
+
+.text-card-title {
+    padding-left: 4px;
+}
+
+.ingredient-link {
+    text-decoration: none;
+    color: rgb(49, 49, 49);
+}
+
+.ingredient-link-own {
+    text-decoration: none;
+    color: rgb(71, 216, 90);
+}
+
+.save-btn {
+    direction: unset;
+    width: 50px;
+    height: 50;
+    border: 0;
+    background: white;
+}
+
+.drink-img{
+    width: 100%;
+    max-width: 800px;
+}
+
+.container-notes{
+    padding: 5%;
+}
+
+.instructions{
+   
+}

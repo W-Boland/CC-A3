@@ -23,18 +23,23 @@
                 <div class="drink-tab-title">
                     View Drinks that can be created using the ingredients saved in your bar
                 </div>
-                <div class="card" style="width: 100%;">
-                        {% for index in range(number)%}
-                        <div class="card-inner" style="width: 15rem;">
-                            <a class="drink-card" href="/drink/{{id[index]}}">
-                                <img src="{{img[index]}}/preview" class="card-img-top">
-                                <div class="card-body">
-                                    <h5 class="card-title"><b class="card-name">{{name[index]}}</b></h5>
-                                </div>
-                            </a>
+                {% if empty %}
+                {% else %}
+                    <div class="card" style="width: 100%;">
+                        <div class="drinks-cards">
+                            {% for index in range(number)%}
+                            <div class="card-inner" style="width: 15rem;">
+                                <a class="drink-card" href="/drink/{{id[index]}}">
+                                    <img src="{{img[index]}}/preview" class="card-img-top">
+                                    <div class="card-body">
+                                        <h5 class="card-title"><b class="card-name">{{name[index]}}</b></h5>
+                                    </div>
+                                </a>
+                            </div>
+                            {% endfor %}
                         </div>
-                        {% endfor %}
-                </div>
+                    </div>
+                {% endif %}
             </div>
             <div class="tab-pane fade" id="nav-favourites" role="tabpanel" aria-labelledby="nav-favourites-tab">    
                 {% if favs %}

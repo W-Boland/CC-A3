@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="ingredient-title"> 
+       <h1> {{ingredient['strIngredient']}} </h1>
+    </div>
+
+    <div>
+        <img src="https://www.thecocktaildb.com/images/ingredients/{{ingredient['strIngredient']}}.png" alt="ingredient picture">
+    </div>
+</div>
+{% endblock %}
