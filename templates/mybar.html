@@ -30,6 +30,9 @@
         {% endif %}
         {% endfor %}
     <hr style="box-shadow: 0px 0px 6px 4px rgba(0, 0, 0, .2); ">
+    <div class="testing">
+        DATA
+    </div>
     <div class="wrapper">
         <div class="header">
             <div class="title">
@@ -76,21 +79,29 @@
                         <div class="name">
                             <span>{{ingredients['strIngredient1']}}</span>
                         </div>
+                        
                         <div class="add">
                             <span>
                                 <form method="POST" id="add">
                                     <td><input class="btn btn-primary" type="submit" value="Add"></td>
                                     <input  type="hidden" name="submit" value="add">
                                     <input type="hidden" name="ingredient" value="{{ingredients['strIngredient1']}}">
-                                </form>
+                                
                             </span>
                         </div>
                         <div class="drink">
                             <span>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+                                    <input 
+                                        class="form-check-input" 
+                                        name="check" 
+                                        type="checkbox" 
+                                        id="flexSwitchCheckChecked" 
+                                        value="test"
+                                        checked>
                                     <label class="form-check-label" for="flexSwitchCheckChecked"></label>
                                 </div>
+                                </form>
                             </span>
                         </div>
                     </div>
@@ -101,6 +112,7 @@
         {% else %}
         {% endif %}
     </div>  
+
 </div>
 
 

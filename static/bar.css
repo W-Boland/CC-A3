@@ -15,6 +15,9 @@
     width: 90%;
 }
 
+.wrapper {
+    padding-bottom: 2%;
+}
 
 .wrapper .header {
     border-radius: 2.5%;
@@ -106,4 +109,17 @@
     height: 50;
     border: 0;
     background: #29a5d8;
+}
+
+.box-outline { 
+    width: 66%;
+    height: 800px;
+    float: right;
+    background-color: red;
+    border: 2px black;
+}
+
+.testing {
+    float: right;
+    width: 66%;
 }

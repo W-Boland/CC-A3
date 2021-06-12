@@ -117,7 +117,7 @@ def ingredientlist_query(search):
     data = response.json()
     return data
 
-def add_ingredient(ingredient):
+def add_ingredient(ingredient, drink):
     ingredientUrl = ingredient.replace(" ","%20")
     # Change for Jager since it has an accent
     if ingredient == "Jagermeister":
@@ -130,7 +130,7 @@ def add_ingredient(ingredient):
         Item={
         'email': session['email'],
         'ingredients': ingredient.title(),
-        'drink': "true",
+        'drink': drink,
         'img': url
     })
     return 
@@ -313,11 +313,14 @@ def todo():
 def mybar():
     if auth():
         ingredientList = None
+        drink = "false"
         if request.method == 'POST':
             if request.form["submit"] == "search":
                 ingredientList = ingredientlist_query(request.form['search'])
             elif request.form["submit"] == "add":
-                add_ingredient(request.form['ingredient'])
+                if request.form.get("check"):
+                    drink = "true"
+                add_ingredient(request.form['ingredient'], drink)
             else:
                 removeItem(request.form['submit'])
 
