@@ -5,11 +5,31 @@ from dotenv import load_dotenv
 import boto3
 import os
 import requests
-
+import datetime
+import random 
 
 application = Flask(__name__)
 application.secret_key = 'thisisthesecretkey'
+STREAM_NAME = "Olands-bevvies"
 load_dotenv()
+
+def get_data():
+    return {
+        'EVENT_TIME': datetime.datetime.now().isoformat(),
+        'TICKER': random.choice(['AAPL', 'AMZN', 'MSFT', 'INTC', 'TBV']),
+        'PRICE': round(random.random() * 100, 2)}
+
+def generate(stream_name, kinesis_client):
+    data = get_data()
+    print(data)
+    response = kinesis_client.put_record(
+        DeliveryStreamName=stream_name,
+        Record={
+            'Data': json.dumps(data)
+        })
+
+    return response
+
 
 def auth():
     if session.get('login')== True:
