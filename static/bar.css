@@ -119,7 +119,9 @@
     border: 2px black;
 }
 
-.testing {
+.ingredient-list {
+    font-size: larger;
+    list-style-type:square;
     float: right;
     width: 66%;
 }

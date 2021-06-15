@@ -136,3 +136,7 @@ a, a:hover, a:focus, a:active {
 .drinks-cards {
   padding-left: 4%;
 }
+
+.title-info {
+  padding-top: .5em;
+}

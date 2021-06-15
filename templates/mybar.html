@@ -7,7 +7,7 @@
         {% if drink['drink'] == "true" %}
         
             <div class="ingedient">
-                <form method="POST" id="shelf">
+                <form method="POST">
                     <div class="title">
                         <button
                             style="float: right;" 
@@ -30,13 +30,32 @@
         {% endif %}
         {% endfor %}
     <hr style="box-shadow: 0px 0px 6px 4px rgba(0, 0, 0, .2); ">
-    <div class="testing">
-        DATA
+    <div class="ingredient-list">
+        <h1> List of other Ingredients:</h1>
+        <ul>
+            <form method="POST">
+            {% for drink in ingredients%}
+                {% if drink['drink'] == "false" %}
+                    <li>                         
+                        <button
+                        value="{{drink['ingredients']}}"
+                        type="submit" 
+                        class="btn-close"
+                        name="submit" 
+                        aria-label="Close">
+                        </button>
+                        {{drink['ingredients']}}
+                    </li>
+                {% else %}
+                {% endif %}
+            {% endfor %}
+            </form>
+        </ul>
     </div>
     <div class="wrapper">
         <div class="header">
             <div class="title">
-                <form method="POST" id="search">
+                <form method="POST">
                     Add Ingredients
                     <input type="hidden" id="search" name="search">
                     <button class="ic" type="submit"> 
@@ -82,7 +101,7 @@
                         
                         <div class="add">
                             <span>
-                                <form method="POST" id="add">
+                                <form method="POST">
                                     <td><input class="btn btn-primary" type="submit" value="Add"></td>
                                     <input  type="hidden" name="submit" value="add">
                                     <input type="hidden" name="ingredient" value="{{ingredients['strIngredient1']}}">
@@ -96,10 +115,10 @@
                                         class="form-check-input" 
                                         name="check" 
                                         type="checkbox" 
-                                        id="flexSwitchCheckChecked" 
+                                        id="{{ingredients['strIngredient1']}}" 
                                         value="test"
                                         checked>
-                                    <label class="form-check-label" for="flexSwitchCheckChecked"></label>
+                                    <label class="form-check-label" for="{{ingredients['strIngredient1']}}"></label>
                                 </div>
                                 </form>
                             </span>

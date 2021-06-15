@@ -78,10 +78,18 @@ def query_favs(limit):
 
 
 def query_drinks():
-
     # Connect to the Dynamodb using Boto3
     dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
     table = dynamodb.Table('Drinks')
+    response = table.query(
+        KeyConditionExpression=Key('email').eq(session['email']),
+    )
+    return response['Items']
+
+def query_saved_drinks():
+    # Connect to the Dynamodb using Boto3
+    dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
+    table = dynamodb.Table('Saved')
     response = table.query(
         KeyConditionExpression=Key('email').eq(session['email']),
     )
@@ -201,6 +209,43 @@ def get_list_measure(info):
             measures.append(info['drinks'][0][string].title())      
     return measures 
 
+def saved_status(id):
+    dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
+    table = dynamodb.Table('Saved')
+    response = table.query(
+        KeyConditionExpression=
+            Key('email').eq(session['email']) & Key('drinkId').eq(id)
+    )
+    if not response['Items']:
+        return False
+    else:
+        return True 
+
+
+def save_drink(saveState, id, drinkInfo):
+    dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
+    table = dynamodb.Table('Saved')
+
+    imgURL = drinkInfo['drinks'][0]['strDrinkThumb']
+    name = drinkInfo['drinks'][0]['strDrink']
+
+    if saveState == "save":
+        # add this saved drink to db 
+        response = table.put_item(
+            Item={
+            'email': session['email'],
+            'drinkId': id,
+            'name': name,
+            'img': imgURL
+        })   
+    elif saveState == "unsave":
+        # remove this drink from db 
+        response = table.delete_item(Key={
+            'email': session['email'],
+            'drinkId': id,
+        })
+    return 
+
 # Defualt index 
 @application.route('/')
 def index():
@@ -210,7 +255,8 @@ def index():
         return render_template('home.html', data=json_object)
     else: 
         return redirect('/login')
-        
+
+@application.route('/drink/<id>', methods=['POST'])  
 @application.route('/drink/<id>')
 def drink(id):
     if auth():
@@ -218,18 +264,25 @@ def drink(id):
             "i": id
         }
         response = (requests.get((os.environ.get("API_GATEWAY_ENDPOINT_URL") + '/id'), params=parameters))
-        drink_info = response.json()
-        listIngredients = get_list_ingredients(drink_info) 
-        listmeasure = get_list_measure(drink_info) 
+        drinkInfo = response.json()
+        if request.method == 'POST':
+            if request.form.get('save'):
+                save_drink("save", id, drinkInfo)
+            elif request.form.get('unsave'):
+                save_drink("unsave", id, drinkInfo)
+
+        listIngredients = get_list_ingredients(drinkInfo) 
+        listmeasure = get_list_measure(drinkInfo) 
         number = len(listIngredients)
         currentIngredients = get_current_ingredients(listIngredients)
-
+        savedStatus = saved_status(id)
         return render_template('drink.html', 
-            drink=drink_info['drinks'][0], 
+            drink=drinkInfo['drinks'][0], 
             ingredients=listIngredients,
             measure=listmeasure,
             number=number,
-            currentBarIngredients=currentIngredients
+            currentBarIngredients=currentIngredients,
+            saved=savedStatus
         )
     else: 
         return redirect('/login')
@@ -271,27 +324,61 @@ def login():
 @application.route('/dashboard')
 def dashboard():
     if auth():
+
+        drinkId = None
+        drinkImg = None
+        number = 0
+        drinkName = None
+        empty = None
+        favourites = None
+        savedId = []
+        savedImg = []
+        savedNumber = 5
+        savedName = []
+        noneSaved = True
+
         favourites = query_favs(5)
         drinks = query_drinks()
-        if not drinks:
-            return render_template('dashboard.html', empty="true")
+        savedDrinks = query_saved_drinks()
+
+        if not savedDrinks:
+            noneSaved=True
         else:
+            noneSaved=False
             drinkName = drinks[0]['name']
             drinkId =  drinks[0]['id']
             drinkImg = drinks[0]['img']
             number = len(drinkId)
-            return render_template('dashboard.html', 
-                id=drinkId, 
-                img=drinkImg, 
-                number=number, 
-                name=drinkName, 
-                favs=favourites
-            )
+
+            for save in savedDrinks:
+                savedId.append(save['drinkId'])
+                savedName.append(save['name'])
+                savedImg.append(save['img'])
+
+            savedNumber = len(savedId)
+
+        if not drinks:
+            empty="true"
+
+        return render_template('dashboard.html', 
+            id=drinkId, 
+            img=drinkImg, 
+            number=number, 
+            name=drinkName, 
+            empty=empty,
+            favs=favourites,
+            savedId=savedId,
+            savedImg=savedImg,
+            savedNumber=savedNumber,
+            savedName=savedName,
+            noneSaved=noneSaved
+        )
     else: 
         return redirect('/login')
 
 @application.route('/explore')
 def explore():
+    
     return render_template('explore.html')
 
 
@@ -318,7 +405,6 @@ def profile():
         url = os.environ.get("PROFILE_S3_BUCKET") + email + ".png"
 
         exists = is_url_image(url)
-        print(exists)
         return render_template('profile.html', url=url, img=exists)
     else: 
         return redirect('/login')
