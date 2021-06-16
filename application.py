@@ -399,11 +399,6 @@ def dashboard():
             noneSaved=True
         else:
             noneSaved=False
-            drinkName = drinks[0]['name']
-            drinkId =  drinks[0]['id']
-            drinkImg = drinks[0]['img']
-            number = len(drinkId)
-
             for save in savedDrinks:
                 savedId.append(save['drinkId'])
                 savedName.append(save['name'])
@@ -413,6 +408,11 @@ def dashboard():
 
         if not drinks:
             empty="true"
+        else:
+            drinkName = drinks[0]['name']
+            drinkId =  drinks[0]['id']
+            drinkImg = drinks[0]['img']
+            number = len(drinkId)
 
         return render_template('dashboard.html', 
             id=drinkId, 
