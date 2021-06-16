@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+
+    <div class="container-shopping">
+        <h1>Shopping List:</h1>
+        <div class="card" style="width: 20rem;">
+            <form method="POST">
+                <ol class="list-group list-group-numbered">
+                    {% for ingredient in listIngredients %}
+                    <input type="hidden" name="item" value="{{ingredient['ingredient']}}" />
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <div class="ms-2 me-auto">
+                            <div class="fw-bold">{{ingredient['ingredient']}}</div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ol>
+                <button 
+                    type="submit" 
+                    class="btn btn-success"
+                    onclick='alert("All of your items will be removed and emailed to you")'>Email List
+                </button>
+            </form>
+        </div>
+    </div>
+
+{% endblock %}

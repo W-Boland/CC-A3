@@ -1,0 +1,108 @@
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='drink.css') }}">
+{% extends 'base.html' %}
+{% block content %}
+    <div class="drink-title"> 
+        <form method="POST">
+            <h1> 
+                {% if saved %}
+                    <input type="hidden" name="unsave" value="unsave">
+                    <button class="save-btn" type="submit"> 
+                        <i class="fas fa-bookmark"></i>
+                    </button> 
+                {% else %}
+                    <input type="hidden" name="save" value="save">
+                    <button class="save-btn" type="submit"> 
+                        <i class="far fa-bookmark"></i>
+                    </button> 
+                {% endif %}
+                <b>{{drink['strDrink']}} </b>  
+                ({{drink['strAlcoholic']}}) 
+            </h1>
+        </form>
+    </div>
+
+    <div class="custom">
+        <div class="drink-info-card">
+            <div class="card mb-3">
+                <img class="drink-img" src="{{drink['strDrinkThumb']}}" alt="drink picture">
+            </div>
+        </div>
+
+        <div class="drink-info-ingredients">
+            <div class="card" style="width: 20rem;">
+                <h2 class="text-card-title">Ingredients:</h2>
+                <ol class="list-group list-group-numbered">
+                    {% for index in range(number) %}
+                        {% if currentBarIngredients[index] == "1" %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <a class="ingredient-link-own" href="/ingredient/{{ingredients[index]}}">
+                                    <div class="fw-bold">{{ingredients[index]}}</div>
+                                </a>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">{{measure[index]}}</span>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <a class="ingredient-link" href="/ingredient/{{ingredients[index]}}">
+                                    <div class="fw-bold">{{ingredients[index]}}</div>
+                                </a>
+                            </div>
+                            <span class="badge bg-primary rounded-pill">{{measure[index]}}</span>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                </ol>
+            </div>
+        </div>
+
+
+        <div class="instructions">
+            <div class="card" style="width: 40rem;">
+                <h2 class="text-card-title">Instructions:</h2>
+                <ol class="list-group list-group-numbered">
+                    <p class="text-in-card"> {{drink['strInstructions']}} </p>
+                </ol>
+            </div>
+        </div>
+    </div>
+    <div class="line"> <hr style="box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, .8); "> </div>
+    <div class="card-shopping">
+        <div class="card" style="width: 22rem;">
+            <h2 class="text-card-title-shopping">Add to Shopping List</h2>
+            <form method="POST">
+                <ol class="list-group">
+                    {% for index in range(number) %}
+                        {% if currentBarIngredients[index] == "1" %}
+                        {% else %}
+                        <li class="list-group-item d-flex justify-content-between align-items-start">
+                            <div class="ms-2 me-auto">
+                                <a class="ingredient-link" href="/ingredient/{{ingredients[index]}}">
+                                    <div class="fw-bold">{{ingredients[index]}}</div>
+                                </a>
+                            </div>
+                            <span >
+                                <input class="form-check-input" name="add" type="checkbox" value="{{ingredients[index]}}">
+                            </span>
+                        </li>
+                        {% endif %}
+                    {% endfor %}
+                </ol>
+                <div class="add-btn">
+                    <button type="submit" class="btn btn-success">Add to List</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="container-notes">
+        <form> 
+            <div class="form-group">
+                <label for="textArea">Add Notes Custom Notes for the drink:</label>
+                <textarea class="form-control" id="textArea" rows="5"></textarea>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

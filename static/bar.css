@@ -1,0 +1,127 @@
+.ingedient {
+    width: 100;
+    margin-bottom: -13;
+    display: inline-block;
+    text-transform: capitalize;
+    padding-top: 10;
+}
+
+* {
+    list-style: none;
+}
+
+.bar-shelf {
+    margin: auto;
+    width: 90%;
+}
+
+.wrapper {
+    padding-bottom: 2%;
+}
+
+.wrapper .header {
+    border-radius: 2.5%;
+    width: 33%;
+    background: #29a5d8;
+    box-shadow: 0px -2px 6px 2px rgba(70, 70, 70, 0.2);
+}
+  
+.wrapper .title {
+    text-align: center;
+    margin-left: 4%;
+    font-weight: 700;
+    font-size: 32px;
+    color: #fff;
+}
+
+.wrapper .search_box {
+    max-width: 1000px;
+    background: #29a5d8;
+    margin-left: 4%;
+    padding: 2px 0 25px;
+    border-radius: 3px;
+}
+
+.wrapper .search_box input {
+    border: 0;
+    border-bottom: 2px solid #e5edfa;
+    width: 96%;
+    outline: none;
+    background: transparent;
+    color: #fff;
+    font-size: 16px;
+}
+
+::placeholder {
+    text-align: left;
+    color: #e5edfa;
+}
+
+.wrapper .search_box input:focus {
+    border-bottom: 2px solid #fff;
+}
+
+
+.table_wrap {
+    width: 33%;
+}
+
+.table_wrap ul li .item {
+    display: flex;
+    background: #fff;
+    padding: 15px 0;
+    margin-left: -40px;
+    height: 50px;
+}
+
+.table_wrap ul li .item .name{
+    width: 60%;
+    padding: 0 15px;
+}
+
+.table_wrap ul li .item .add{
+    width: 25%;
+    padding: 0 15px;
+}
+
+.table_wrap ul li .item .drink{
+    width: 5%;
+    padding: 0 15px;
+}
+
+.table_header ul li .item {
+    border-bottom: 2px solid #eaeaea;
+    font-weight: 600;
+}
+
+.table_body {
+    height: 400px;
+    overflow: auto;
+}
+
+.table_body ul li .item {
+    border-bottom: 1px solid #efefef;
+}
+
+.ic {
+    direction: unset;
+    width: 50px;
+    height: 50;
+    border: 0;
+    background: #29a5d8;
+}
+
+.box-outline { 
+    width: 66%;
+    height: 800px;
+    float: right;
+    background-color: red;
+    border: 2px black;
+}
+
+.ingredient-list {
+    font-size: larger;
+    list-style-type:square;
+    float: right;
+    width: 66%;
+}

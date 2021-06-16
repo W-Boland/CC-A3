@@ -1,0 +1,157 @@
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='bar.css') }}">
+{% extends 'base.html' %}
+{% block content %}
+<div class=bar-shelf>
+    <br>
+        {% for drink in ingredients %}
+        {% if drink['drink'] == "true" %}
+        
+            <div class="ingedient">
+                <form method="POST">
+                    <div class="title">
+                        <button
+                            style="float: right;" 
+                            value="{{drink['ingredients']}}"
+                            type="submit" 
+                            class="btn-close"
+                            name="submit" 
+                            aria-label="Close">
+                        </button>
+                    </div>
+                    <img 
+                        data-bs-toggle="tooltip" 
+                        data-bs-placement="top" 
+                        title="{{drink['ingredients']}}"
+                        src={{drink['img']}}>
+                </form>
+            </div>
+        
+        {% else %}
+        {% endif %}
+        {% endfor %}
+    <hr style="box-shadow: 0px 0px 6px 4px rgba(0, 0, 0, .2); ">
+    <div class="ingredient-list">
+        <h1> List of other Ingredients:</h1>
+        <ul>
+            <form method="POST">
+            {% for drink in ingredients%}
+                {% if drink['drink'] == "false" %}
+                    <li>                         
+                        <button
+                        value="{{drink['ingredients']}}"
+                        type="submit" 
+                        class="btn-close"
+                        name="submit" 
+                        aria-label="Close">
+                        </button>
+                        {{drink['ingredients']}}
+                    </li>
+                {% else %}
+                {% endif %}
+            {% endfor %}
+            </form>
+        </ul>
+    </div>
+    <div class="wrapper">
+        <div class="header">
+            <div class="title">
+                <form method="POST">
+                    Add Ingredients
+                    <input type="hidden" id="search" name="search">
+                    <button class="ic" type="submit"> 
+                        <i class="fas fa-chevron-down"></i> 
+                    </button> 
+                    <input type="hidden" name="submit" value="search">
+                </form>
+            </div>
+            {% if ingredientList %}
+                <div class="search_box">
+                <input type="text" id="search_input" placeholder="Fliter Ingredients">
+                </div>
+            {% else %}
+            {% endif %}
+        </div>
+        {% if ingredientList %}
+        <div class="table_wrap">
+            <div class="table_header">
+                <ul>
+                    <li>
+                        <div class="item">
+                            <div class="name">
+                                <span>NAME</span>
+                            </div>
+                            <div class="add">
+                                <span>ADD</span>
+                            </div>
+                            <div class="drink-text">
+                                Drink?
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        <div class="table_body">
+            <ul>
+                {% for ingredients in ingredientList['drinks'] %}
+                <li>
+                    <div class="item">
+                        <div class="name">
+                            <span>{{ingredients['strIngredient1']}}</span>
+                        </div>
+                        
+                        <div class="add">
+                            <span>
+                                <form method="POST">
+                                    <td><input class="btn btn-primary" type="submit" value="Add"></td>
+                                    <input  type="hidden" name="submit" value="add">
+                                    <input type="hidden" name="ingredient" value="{{ingredients['strIngredient1']}}">
+                                
+                            </span>
+                        </div>
+                        <div class="drink">
+                            <span>
+                                <div class="form-check form-switch">
+                                    <input 
+                                        class="form-check-input" 
+                                        name="check" 
+                                        type="checkbox" 
+                                        id="{{ingredients['strIngredient1']}}" 
+                                        value="test"
+                                        checked>
+                                    <label class="form-check-label" for="{{ingredients['strIngredient1']}}"></label>
+                                </div>
+                                </form>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% else %}
+        {% endif %}
+    </div>  
+
+</div>
+
+
+
+<script>
+    var search_input = document.querySelector("#search_input");
+    search_input.addEventListener("keyup", function(e){
+        var span_items = document.querySelectorAll(".table_body ul li .item .name span");
+        var search_item = e.target.value.toLowerCase();
+    
+        span_items.forEach(function(item){
+            if(item.textContent.toLowerCase().indexOf(search_item) != -1){
+                item.closest("li").style.display = "block"
+            }
+            else{
+                item.closest("li").style.display = "none";
+            }
+        })
+        
+    });
+</script>
+
+{% endblock %}

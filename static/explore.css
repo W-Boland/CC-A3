@@ -1,0 +1,49 @@
+.main-search{
+    width: 20em; 
+    height: 1em;
+    margin-top: 4%;
+    margin: auto;
+}
+
+.input-outline {
+    display: flex;
+}
+
+.search {
+    width: 175%;
+    height: 100%;
+    border-radius: 10%;
+    color: cornflowerblue;
+    border-color: white;
+    padding-left: 10%;
+    margin-left: 10%;
+}
+
+.input-group{
+    margin-top: 10%;
+}
+
+.btn-popular {
+    width: 100%;
+    gap: 10px;
+    display: flex;
+}
+
+.title {
+    text-align: center;
+    width: 100%;
+    padding-top: 3%;
+    margin: auto;
+}
+
+.drinks {
+    width: 80%;
+    margin: auto;
+}
+
+.line {
+    width: 80%;
+    margin: auto;
+    margin-top: 7%;
+    align-items: center;
+}

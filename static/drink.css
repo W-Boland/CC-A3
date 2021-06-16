@@ -1,0 +1,77 @@
+.drink-title {
+    padding-top: 3%;
+    padding-left: 4.5%;
+}
+
+.drink-info-card {
+    width: 40%;
+}
+
+.custom {
+    padding-left: 5%;
+    padding-right: 5%;
+    display: flex;
+    width:100%;
+}
+
+.drink-info-ingredients {
+   padding-left: 2%;
+   padding-top: .2%;
+}
+
+.text-in-card {
+    padding: 4px;
+}
+
+.text-card-title {
+    margin-left: 4px;
+}
+
+.ingredient-link {
+    text-decoration: none;
+    color: rgb(49, 49, 49);
+}
+
+.ingredient-link-own {
+    text-decoration: none;
+    color: rgb(71, 216, 90);
+}
+
+.save-btn {
+    direction: unset;
+    width: 50px;
+    height: 50;
+    border: 0;
+    background: white;
+}
+
+.drink-img{
+    width: 100%;
+    max-width: 800px;
+}
+
+.container-notes{
+    padding: 5%;
+}
+
+.instructions{
+   padding-left: 1%;
+}
+
+.card-shopping {
+    padding-left: 5%;
+}
+
+.line {
+    padding-left: 5%;
+    padding-right: 5%;
+    padding-bottom: 2%;
+}
+
+.text-card-title-shopping {
+    padding-left: 2%;
+}
+
+.add-btn {
+    padding: 1%;
+}
