@@ -1,16 +1,34 @@
 {% extends 'base.html' %}
 {% block content %}
-    {% for drink in data["drinks"] %}
-    <div class="card" style="width: 9rem;">
-        <img src="{{drink['strDrinkThumb']}}/preview" class="card-img-top" alt="...">
-        <div class="card-body">
-        <h5 class="card-title">{{drink['strDrink']}}</h5>
-        <p class="card-text">
-            &#9734
-            &#9733
-        </p>
-        <a href="/drink/{{drink['idDrink']}}" class="btn btn-primary">View</a>
-        </div>
+<div class="container">
+    <div class="home-heading">
+        <h1>Welcome {{session['userName']}} to Oland's Bevvies &#127881</h1>
     </div>
-    {% endfor %}
+    <h2>
+        Head to <a class="bar-link" href="/mybar">My Bar</a> and add ingredients to your collection.
+        After adding all the ingredients you own check out the <a class="bar-link" href="/dashboard">Dashboard</a>, 
+        to see if you can make any new cocktails. 
+    </h2> 
+    <br>
+    <h2>
+        Check out the  <a class="bar-link" href="/explore">Explore</a> page to find new and exciting cocktails.
+        Search by type of cocktail or name. You can even find the most popular cocktails trending currently. 
+        If you're completely unsure click the random button for a list of random cocktails. 
+    </h2>
+    <br>
+    <h2>
+        Find a drink you want to make another time, click the bookmark icon on its page to save the drink in 
+        your dashboard. Need to buy more ingredients to make the drink simply scroll down and add them to your
+        <a class="bar-link" href="/explore">Shopping List</a>. This list can be emailed to you so when you next head
+        out to a bottle shop you'll have a list of things to buy.    
+    </h2>
+    <br>
+    <h2>
+        To lazy to manually enter the ingredients take a photo of it and we'll take care of it for you. (Comming Soon)
+    </h2>
+    <br>
+    <h3>
+        Enjoy and please leave feedback &#128522
+    </h3>
+</div>
 {% endblock %}

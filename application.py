@@ -3,6 +3,7 @@ from boto3.dynamodb.conditions import Key, Attr
 from dotenv import load_dotenv
 
 import boto3
+import json
 import os
 import requests
 import datetime
@@ -10,19 +11,20 @@ import random
 
 application = Flask(__name__)
 application.secret_key = 'thisisthesecretkey'
-STREAM_NAME = "Olands-bevvies"
 load_dotenv()
 
-def get_data():
+def get_data(search):
     return {
         'EVENT_TIME': datetime.datetime.now().isoformat(),
-        'TICKER': random.choice(['AAPL', 'AMZN', 'MSFT', 'INTC', 'TBV']),
-        'PRICE': round(random.random() * 100, 2)}
+        'EMAIL': session['email'],
+        'USERNAME': session['userName'],
+        'SEARCH': search}
 
-def generate(stream_name, kinesis_client):
-    data = get_data()
+def generate(stream_name, search):
+    kinesisClient = boto3.client('firehose', region_name='ap-southeast-2')
+    data = get_data(search)
     print(data)
-    response = kinesis_client.put_record(
+    response = kinesisClient.put_record(
         DeliveryStreamName=stream_name,
         Record={
             'Data': json.dumps(data)
@@ -75,7 +77,17 @@ def query_favs(limit):
     sortedList = sorted(response['Items'], key=sort_function, reverse=True)
     return sortedList[:limit]
 
-
+def add_to_shopping_list(data):
+    dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
+    table = dynamodb.Table('Shopping')
+    for ingredient in data:
+        response = table.put_item(
+            Item={
+                'email': session['email'],
+                'ingredient': ingredient
+            }
+        )
+    return 
 
 def query_drinks():
     # Connect to the Dynamodb using Boto3
@@ -221,6 +233,24 @@ def saved_status(id):
     else:
         return True 
 
+def return_shopping_list():
+    dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
+    table = dynamodb.Table('Shopping')
+    response = table.query(
+        KeyConditionExpression=Key('email').eq(session['email']),
+    )
+    return response['Items']
+
+def clear_shopping_list(ingredients):
+    
+    dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
+    table = dynamodb.Table('Shopping')
+    for ingredient in ingredients:
+        response = table.delete_item(Key={
+            'email': session['email'],
+            'ingredient': ingredient
+        })
+    return
 
 def save_drink(saveState, id, drinkInfo):
     dynamodb = boto3.resource('dynamodb', region_name='ap-southeast-2')
@@ -246,6 +276,26 @@ def save_drink(saveState, id, drinkInfo):
         })
     return 
 
+def search_from_id(data):
+    # call the API Gateway and then return the results
+    parameters = {
+        "s": data[0]
+    }
+    response = (requests.get((os.environ.get("API_GATEWAY_ENDPOINT_URL") + '/ingredient'), params=parameters))
+    drink_info = response.json()
+    return drink_info['drinks']
+
+def search_from_random(data):
+    # call the API Gateway and then return the results
+    response = (requests.get((os.environ.get("API_GATEWAY_ENDPOINT_URL") + '/random')))
+    drink_info = response.json()
+    return drink_info['drinks']
+
+def search_from_popular(data):
+    response = (requests.get((os.environ.get("API_GATEWAY_ENDPOINT_URL") + '/popular')))
+    drink_info = response.json()
+    return drink_info['drinks']
+
 # Defualt index 
 @application.route('/')
 def index():
@@ -266,6 +316,10 @@ def drink(id):
         response = (requests.get((os.environ.get("API_GATEWAY_ENDPOINT_URL") + '/id'), params=parameters))
         drinkInfo = response.json()
         if request.method == 'POST':
+            if request.form.get('add'):
+                add_to_shopping_list(request.form.getlist('add'))
+
+
             if request.form.get('save'):
                 save_drink("save", id, drinkInfo)
             elif request.form.get('unsave'):
@@ -316,7 +370,7 @@ def login():
             session['email'] = email
             session['userName'] = userName
             session['login'] = True
-            return redirect('/dashboard')
+            return redirect('/')
     else:
         return render_template('login.html')
 
@@ -376,10 +430,24 @@ def dashboard():
     else: 
         return redirect('/login')
 
+@application.route('/explore',methods=['POST'])
 @application.route('/explore')
 def explore():
-    
-    return render_template('explore.html')
+    if auth():
+        showDrinks = False 
+        drinks = []
+        if request.method == 'POST':
+            if request.form.get("search"):
+                drinks = search_from_id(request.form.getlist('search'))
+                generate(os.environ.get("STREAM_NAME"),request.form.getlist('search'))
+            elif request.form.get("random"):
+                drinks = search_from_random(request.form.getlist('random'))
+            elif request.form.get("popular"):
+                drinks = search_from_popular(request.form.getlist('popular'))
+            showDrinks = True
+        return render_template('explore.html', showDrinks=showDrinks, drinks=drinks)
+    else:
+        return redirect('/login')
 
 
 @application.route('/profile',methods=['POST'])
@@ -409,10 +477,21 @@ def profile():
     else: 
         return redirect('/login')
 
+@application.route('/shopping', methods=['POST'])
+@application.route('/shopping')
+def shopping():
+    if auth():
+        if request.method == 'POST':
+            clear_shopping_list(request.form.getlist('item'))
 
+        listIngredients = return_shopping_list()
+        return render_template('shopping.html', listIngredients=listIngredients)
+    else: 
+        return redirect('/login')
+        
 @application.route('/404')
-def todo():
-    return "PAGE NOT COMPLETE"
+def error_page():
+    return "404"
 
 @application.route('/mybar',methods=['POST'])
 @application.route('/mybar')

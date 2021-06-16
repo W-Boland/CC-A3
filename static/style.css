@@ -134,9 +134,59 @@ a, a:hover, a:focus, a:active {
 }
 
 .drinks-cards {
-  padding-left: 4%;
+  padding: auto;
+  align-items: center;
+  gap: 5%;
 }
 
 .title-info {
   padding-top: .5em;
+}
+
+.container-shopping {
+  padding-top: 3%;
+  padding-left: 3%;
+  
+}
+
+.ingredient-title {
+  text-align: center;
+  width: 100%;
+  padding-top: 5%;
+}
+
+.ingredient-image {
+  width: 100%;
+  display: flex;
+}
+
+.ingredient-img{
+  width: 100%;
+  max-width: 800px;
+}
+
+.ingredient-desc{
+  margin: auto;
+  padding: 3%;
+}
+
+.ingredient-container {
+  width: 80%;
+  padding: auto;
+}
+
+.home-heading {
+  margin-top: 5%;
+  padding-bottom: 3%;
+}
+
+.bar-link {
+  color: blue;
+  text-decoration: none;
+}
+
+.bar-link:hover {
+  color: blue;
+  opacity: 100%;
+  text-decoration: none;
 }

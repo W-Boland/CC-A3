@@ -1,6 +1,59 @@
+<link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='explore.css') }}">
 {% extends 'base.html' %}
 {% block content %}
 
-    
+    <div class="title">
+        <h1> Explore New Cocktails </h1>
+    </div>
 
+    <div class="main-search">
+        <div class="input-group">
+            <div>
+                <form method="POST">
+                    <div class="input-outline">
+                        <input type="search" placeholder="Search"  name="search" class="form-control" />
+                    <div>
+                    <div class="search">
+                        <button type="submit" class="btn-success search">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+
+    <form method="POST">
+        <div class="btn-popular">
+            <button type="submit" value="popular" name="popular" class="btn btn-primary">
+                Popular 
+            </button>
+            <button type="submit" value="random" name="random" class="btn btn-primary">
+                Random 
+            </button>
+        </div>
+    </form>
+
+</div>
+
+<div class="line"> <hr style="box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, .8); "> </div>
+    {% if showDrinks %}
+    <div class="drinks">
+        {% for drink in drinks %}
+        <div class="card-inner" style="width: 16.9rem;">
+            <a class="drink-card" href="/drink/{{drink['idDrink']}}">
+                <img src="{{drink['strDrinkThumb']}}/preview" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title"><b class="card-name"> {{drink['strDrink']}} </b></h5>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    
 {% endblock %}
